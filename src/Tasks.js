@@ -25,11 +25,15 @@ function clearData() {
   input.value = '';
 }
 
-populateList(tasksArray);
-
 function updateLS(tasksArray) {
   localStorage.setItem('task', JSON.stringify(tasksArray));
 }
+
+const updateIndex = () => {
+  for (let i = 0; i < tasksArray.length; i += 1) {
+    tasksArray[i].index = i + 1;
+  }
+};
 
 export function addTask() {
   if (input.value.trim() !== '') {
@@ -41,9 +45,11 @@ export function addTask() {
   }
 }
 
+// delete tasks
 todoList.addEventListener('click', (e) => {
   if (e.target.classList.contains('delete')) {
     tasksArray = tasksArray.filter((task) => task.index !== +(e.target.parentNode.id));
+    updateIndex();
     updateLS(tasksArray);
     e.target.parentNode.remove();
   }
@@ -55,3 +61,5 @@ export const editTasks = (e) => {
     updateLS(tasksArray);
   }
 };
+
+populateList(tasksArray);
