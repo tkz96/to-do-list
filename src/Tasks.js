@@ -14,8 +14,8 @@ const populateList = (tasksArray) => {
   todoList.innerHTML = '';
   for (let i = 0; i < tasksArray.length; i += 1) {
     const li = document.createElement('li');
-    li.id = `${tasksArray[i].index}`;
-    li.innerHTML = `<input type="checkbox"><div class="task-text" contenteditable="true" data_id='${i}'>${tasksArray[i].description}</div>
+    //  li.id = `${tasksArray[i].index}`;
+    li.innerHTML = `<input type="checkbox" class="checkbox" data_id='${i}' ${tasksArray[i].completed ? 'checked' : ''}><div class="task-text ${tasksArray[i].completed ? 'line' : ''}" contenteditable="true" data_id='${i}'>${tasksArray[i].description}</div>
         <i class="fas fa-trash-alt delete" data_id='${i}'></i>`;
     todoList.appendChild(li);
   }
@@ -60,6 +60,26 @@ export const editTasks = (e) => {
     tasksArray[e.target.getAttribute('data_id')].description = e.target.innerText;
     updateLS(tasksArray);
   }
+};
+
+export const check = (e) => {
+  if (e.target.className.includes('checkbox')) {
+    const { checked } = e.target;
+    const text = e.target.parentNode.querySelector('.task-text');
+    if (checked) {
+      text.classList.add('line');
+    } else {
+      text.classList.remove('line');
+    }
+    tasksArray[e.target.getAttribute('data_id')].completed = checked;
+  }
+  updateLS(tasksArray);
+};
+
+export const clear = () => {
+  tasksArray = tasksArray.filter((task) => (task.completed === false));
+  updateLS(tasksArray);
+  populateList(tasksArray);
 };
 
 populateList(tasksArray);
